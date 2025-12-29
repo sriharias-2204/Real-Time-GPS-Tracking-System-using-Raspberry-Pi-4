@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="shortcut icon" href="#">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time GPS Tracker with WebSocket</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=HereIenteredmyAPIKey &callback=initMap" async defer></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.4/socket.io.js"></script>
+    <style>
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+    <script>
+        var map;
+
+        function initMap() {
+            // Initialize the map
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 0, lng: 0},
+                zoom: 15
+            });
+
+            // Connect to the WebSocket server
+            var socket = io.connect('http://127.0.0.1:5000');
+
+            // Handle updates received from the server
+            socket.on('update_location', function(data) {
+                var location = {lat: parseFloat(data.lat), lng: parseFloat(data.long)};
+
+                // Update the map with the latest location
+                map.setCenter(location);
+
+                // Clear existing markers
+                mapMarkers.forEach(function(marker) {
+                    marker.setMap(null);
+                });
+
+                // Add a new marker for the latest location
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map,
+                    title: 'Current Location'
+                });
+
+                // Save the marker to clear it later
+                mapMarkers.push(marker);
+            });
+        }
+
+        // Array to store map markers
+        var mapMarkers = [];
+    </script>
+</head>
+<body>
+    <!-- Map container -->
+    <div id="map"></div>
+</body>
+</html>
