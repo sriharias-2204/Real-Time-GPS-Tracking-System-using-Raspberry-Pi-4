@@ -31,9 +31,9 @@ pip install flask-socketio
 GPS-Tracking-System/
 
 │
-├── gps_reader.py          # Reads GPS data from serial port
+├── read.py          # Reads GPS data from serial port
 
-├── socket_server.py       # Flask + SocketIO server
+├── application.py       # Flask + SocketIO server
 
 ├── templates/
 
